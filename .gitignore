@@ -9,7 +9,9 @@ dist
 *.log
 *.log.*
 *.json
+*.jsonl
 !/playground/**/*.json
+!/playground/**/*.jsonl
 slurm-*.out
 
 # Editor

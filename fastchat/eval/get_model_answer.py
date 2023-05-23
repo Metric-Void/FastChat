@@ -62,7 +62,10 @@ def get_model_answers(model_path, model_id, question_jsons):
         )
         output_ids = output_ids[0][len(input_ids[0]) :]
         outputs = tokenizer.decode(output_ids, skip_special_tokens=True).strip()
-
+        
+        if("### Human" in outputs):
+            outputs = outputs[:outputs.find("### Human")]
+            
         ans_id = shortuuid.uuid()
         ans_jsons.append(
             {
