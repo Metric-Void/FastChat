@@ -28,8 +28,10 @@ from transformers.trainer_pt_utils import LabelSmoother
 
 from fastchat.conversation import get_default_conv_template, SeparatorStyle
 
-IGNORE_TOKEN_ID = LabelSmoother.ignore_index
+from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+from torch.distributed.fsdp import StateDictType, FullStateDictConfig
 
+IGNORE_TOKEN_ID = LabelSmoother.ignore_index
 
 @dataclass
 class ModelArguments:
@@ -66,12 +68,16 @@ def rank0_print(*args):
 
 def safe_save_model_for_hf_trainer(trainer: transformers.Trainer, output_dir: str):
     """Collects the state dict and dump to disk."""
+    FSDP.set_state_dict_type(
+        trainer.model,
+        StateDictType.FULL_STATE_DICT,
+        state_dict_config = FullStateDictConfig(offload_to_cpu=True),
+    )
     state_dict = trainer.model.state_dict()
     if trainer.args.should_save:
         cpu_state_dict = {key: value.cpu() for key, value in state_dict.items()}
         del state_dict
         trainer._save(output_dir, state_dict=cpu_state_dict)  # noqa
-
 
 def preprocess(
     sources,
