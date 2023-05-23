@@ -1,10 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=vicuna-multinode
-#SBATCH --nodes=4
 #SBATCH --ntasks=4
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1
-#SBATCH --mem=320G
+#SBATCH --mem=160G
 #SBATCH --time=01:00:00
 #SBATCH --mail-type=begin
 #SBATCH --mail-type=end
