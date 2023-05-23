@@ -3,15 +3,14 @@ __pycache__
 *.pyc
 *.egg-info
 dist
+.venv
 
 # Log
 *.log
+*.log.*
 *.json
 !/playground/**/*.json
 slurm-*.out
-
-# Data
-!**/alpaca-data-conversation.json
 
 # Editor
 .idea
@@ -21,3 +20,10 @@ slurm-*.out
 .DS_Store
 wandb
 output
+
+# Data
+*.pkl
+*.csv
+
+# Build
+build
