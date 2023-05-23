@@ -3,10 +3,9 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --gres=gpu:1
-#SBATCH --constraint=gpu80
+#SBATCH --gres=gpu:4
 #SBATCH --mem=320G
-#SBATCH --time=04:00:00
+#SBATCH --time=01:00:00
 #SBATCH --mail-type=begin
 #SBATCH --mail-type=end
 #SBATCH --mail-type=fail
@@ -22,8 +21,9 @@ conda activate /scratch/gpfs/$USER/.conda/fastchat
 cd /scratch/gpfs/$USER/FastChat
 
 export WANDB_MODE=offline
+export LOGLEVEL=INFO
 
-torchrun --nproc_per_node=1 \
+torchrun --nproc_per_node=4 \
     --master_port=20001 fastchat/train/train_mem.py \
     --model_name_or_path /scratch/gpfs/zl1111/llama-7b \
     --data_path /scratch/gpfs/$USER/FastChat/playground/train-data/dummy.json \

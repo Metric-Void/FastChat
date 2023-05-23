@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=vicuna-bp-trainer
-#SBATCH --nodes=2
-#SBATCH --ntasks=2
+#SBATCH --job-name=vicuna-multinode
+#SBATCH --nodes=4
+#SBATCH --ntasks=4
 #SBATCH --cpus-per-task=8
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --mem=320G
-#SBATCH --time=04:00:00
+#SBATCH --time=01:00:00
 #SBATCH --mail-type=begin
 #SBATCH --mail-type=end
 #SBATCH --mail-type=fail
@@ -22,10 +22,25 @@ cd /scratch/gpfs/$USER/FastChat
 
 export WANDB_MODE=offline
 
-torchrun \
-    --nnodes=2 \
-    --nproc_per_node=2 \
-    --master_port=20001 fastchat/train/train_mem.py \
+nodes=( $( scontrol show hostnames $SLURM_JOB_NODELIST ) )
+nodes_array=($nodes)
+head_node=${nodes_array[0]}
+head_node_ip=$(srun --nodes=1 --ntasks=1 -w "$head_node" hostname --ip-address)
+
+echo Head Node: $head_node
+echo Node IP: $head_node_ip
+echo Global PID: $SLURM_PROCID
+
+export LOGLEVEL=INFO
+
+srun torchrun \
+    --nnodes=4 \
+    --nproc_per_node=1 \
+    --node_rank=$SLURM_PROCID \
+    --rdzv_id=$RANDOM \
+    --rdzv_backend=c10d \
+    --rdzv_endpoint $head_node_ip:20001 \
+    fastchat/train/train_mem.py \
     --model_name_or_path /scratch/gpfs/zl1111/llama-7b \
     --data_path /scratch/gpfs/$USER/FastChat/playground/train-data/dummy.json \
     --bf16 True \
