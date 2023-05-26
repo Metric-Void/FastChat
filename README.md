@@ -1,3 +1,8 @@
+# New Documentation
+This repository is mainly for running the model on the Della cluster for profiling. Please check the documentation here: https://peat-tote-747.notion.site/Running-and-training-Vicuna-on-Della-e9495da116ae4303b69adc105b4b2a23
+
+BELOW IS THE ORIGINAL DOCUMENTATION OF THIS REPOSITORY. Please follow the Notion link above for installation, inference and training on the Della cluster.
+
 # FastChat
 | [**Demo**](https://chat.lmsys.org/) | [**Arena**](https://arena.lmsys.org) | [**Discord**](https://discord.gg/KjdtsE9V) | [**Twitter**](https://twitter.com/lmsysorg) |
 
